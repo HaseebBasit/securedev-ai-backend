@@ -17,22 +17,9 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-// 2. CORS Configuration
-const allowedOrigins = [
-  CLIENT_URL,
-  'http://localhost:3000',
-  'http://127.0.0.1:3000'
-];
-
+// 2. CORS Configuration - Permissive for Vercel, localhost, and custom domains
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    return callback(new Error('Blocked by CORS policy'));
-  },
+  origin: true, // Dynamically reflects origin and allows credentials
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
